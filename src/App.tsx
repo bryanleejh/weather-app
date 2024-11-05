@@ -1,4 +1,3 @@
-import "./App.css";
 import WeatherSearch from "./components/weather-search";
 
 function App() {
