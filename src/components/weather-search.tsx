@@ -50,8 +50,6 @@ export default function WeatherSearch() {
       const geocodingAPI = `http://api.openweathermap.org/geo/1.0/direct?q=${city},${country}&limit=1&appid=${API_KEY}`;
       const geoResponse = await fetch(geocodingAPI);
 
-      console.log("geoResponse", geoResponse);
-
       if (!geoResponse.ok) {
         throw new Error("Geocoding API call failed");
       }
@@ -61,7 +59,6 @@ export default function WeatherSearch() {
         throw new Error("Location not found");
       }
 
-      console.log("geoData", geoData);
       const { lat, lon } = geoData[0];
 
       const weatherAPI = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
@@ -72,7 +69,6 @@ export default function WeatherSearch() {
       }
 
       const weatherData = await weatherResponse.json();
-      console.log("weatherData", weatherData);
       setWeatherData(weatherData);
       setErrorMessage("");
 
