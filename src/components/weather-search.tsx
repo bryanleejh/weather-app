@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import SearchInput from "./search-input";
 import WeatherDisplay from "./weather-display";
-import SearchHistoryItem from "./search-history-item";
+import SearchHistory from "./search-history";
 
 export default function WeatherSearch() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -112,20 +112,11 @@ export default function WeatherSearch() {
             weatherData={weatherData}
             kelvinToCelsius={kelvinToCelsius}
           />
-
-          <div className="space-y-2">
-            <h3 className="text-lg font-medium">Search History</h3>
-            <div className="space-y-2">
-              {searchHistory.map((item) => (
-                <SearchHistoryItem
-                  key={`${item.location}${item.timestamp}`}
-                  item={item}
-                  fetchWeatherData={fetchWeatherData}
-                  deleteHistoryEntry={deleteHistoryEntry}
-                />
-              ))}
-            </div>
-          </div>
+          <SearchHistory
+            searchHistory={searchHistory}
+            fetchWeatherData={fetchWeatherData}
+            deleteHistoryEntry={deleteHistoryEntry}
+          />
         </CardContent>
       </Card>
     </div>
