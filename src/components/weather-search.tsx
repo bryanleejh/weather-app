@@ -1,11 +1,10 @@
 "use client";
 
-import { Search, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import SearchInput from "./search-input";
 import WeatherDisplay from "./weather-display";
+import SearchHistoryItem from "./search-history-item";
 
 export default function WeatherSearch() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -118,31 +117,12 @@ export default function WeatherSearch() {
             <h3 className="text-lg font-medium">Search History</h3>
             <div className="space-y-2">
               {searchHistory.map((item) => (
-                <div
+                <SearchHistoryItem
                   key={`${item.location}${item.timestamp}`}
-                  className="flex items-center justify-between bg-white/10 rounded-lg p-4"
-                >
-                  <span>{item.location}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">{item.timestamp}</span>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => fetchWeatherData(item.location)}
-                    >
-                      <Search className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() =>
-                        deleteHistoryEntry(item.location, item.timestamp)
-                      }
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
+                  item={item}
+                  fetchWeatherData={fetchWeatherData}
+                  deleteHistoryEntry={deleteHistoryEntry}
+                />
               ))}
             </div>
           </div>
