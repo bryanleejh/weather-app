@@ -4,7 +4,7 @@ import { Search, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import SearchInput from "./search-input";
 
 export default function WeatherSearch() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -100,22 +100,12 @@ export default function WeatherSearch() {
     <div className="min-h-screen bg-[#b197d1] p-4 flex items-center justify-center">
       <Card className="w-full max-w-2xl bg-white/20 backdrop-blur border-0">
         <CardHeader className="space-y-2">
-          <div className="relative">
-            <Input
-              className="w-full bg-white/20 border-0 placeholder:text-gray-400"
-              placeholder="City, Country (e.g. Singapore, SG)"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Button
-              size="icon"
-              className="absolute right-0 top-0 bg-[#7c4dbd] hover:bg-[#6a3dad]"
-              onClick={() => fetchWeatherData(searchQuery)}
-            >
-              <Search className="h-4 w-4" />
-            </Button>
-            {errorMessage && <div className="text-red-500">{errorMessage}</div>}
-          </div>
+          <SearchInput
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            onSearch={() => fetchWeatherData(searchQuery)}
+            errorMessage={errorMessage}
+          />
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="relative overflow-hidden rounded-lg bg-white/10 p-6">
