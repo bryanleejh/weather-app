@@ -16,7 +16,7 @@ const SearchHistory: React.FC<SearchHistoryProps> = ({
   deleteHistoryEntry,
 }) => {
   return (
-    <div className="space-y-2">
+    <div className="rounded-lg relative overflow-hidden bg-white/10 p-6">
       <h3 className="text-lg font-medium">Search History</h3>
       <div className="space-y-2">
         {searchHistory.map((item) => (

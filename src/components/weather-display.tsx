@@ -21,7 +21,7 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({
   kelvinToCelsius,
 }) => {
   return (
-    <div className="relative overflow-hidden rounded-lg bg-white/10 p-6">
+    <div className="relative overflow-hidden rounded-lg p-6">
       {weatherData ? (
         <div className="flex justify-between items-start">
           <div className="space-y-2">
