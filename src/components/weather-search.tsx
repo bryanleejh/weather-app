@@ -34,6 +34,10 @@ export default function WeatherSearch() {
 
   const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
 
+  const kelvinToCelsius = (kelvin: number) => {
+    return Math.floor(kelvin - 273.15);
+  };
+
   const fetchWeatherData = async (location: string) => {
     const [city, country] = location.split(",").map((item) => item.trim());
 
@@ -88,6 +92,14 @@ export default function WeatherSearch() {
     }
   };
 
+  const deleteHistoryEntry = (location: string, timestamp: string) => {
+    setSearchHistory((prevHistory) =>
+      prevHistory.filter(
+        (entry) => entry.location !== location || entry.timestamp !== timestamp
+      )
+    );
+  };
+
   return (
     <div className="min-h-screen bg-[#b197d1] p-4 flex items-center justify-center">
       <Card className="w-full max-w-2xl bg-white/20 backdrop-blur border-0">
@@ -116,11 +128,11 @@ export default function WeatherSearch() {
                 <div className="space-y-2">
                   <div className="text-sm">Today's Weather</div>
                   <div className="text-7xl font-light">
-                    {weatherData.main.temp}°
+                    {kelvinToCelsius(weatherData.main.temp)}°
                   </div>
                   <div className="text-sm">
-                    H: {weatherData.main.temp_max}° L:{" "}
-                    {weatherData.main.temp_min}°
+                    H: {kelvinToCelsius(weatherData.main.temp_max)}° L:{" "}
+                    {kelvinToCelsius(weatherData.main.temp_min)}°
                   </div>
                   <div className="flex gap-4 text-sm mt-4">
                     <div>
@@ -166,7 +178,13 @@ export default function WeatherSearch() {
                     >
                       <Search className="h-4 w-4" />
                     </Button>
-                    <Button size="icon" variant="ghost">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() =>
+                        deleteHistoryEntry(item.location, item.timestamp)
+                      }
+                    >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
