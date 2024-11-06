@@ -25,20 +25,20 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({
   kelvinToCelsius,
 }) => {
   return (
-    <div className="relative overflow-hidden rounded-lg p-6">
+    <div className="relative overflow-hidden rounded-lg py-4">
       {weatherData ? (
         <div className="flex justify-between items-start">
           <div className="space-y-2 w-full">
             <div className="text-sm">Today's Weather</div>
-            <div className="text-7xl font-light">
+            <div className="text-8xl font-bold text-purple-700">
               {kelvinToCelsius(weatherData.main.temp)}°
             </div>
             <div className="text-sm">
               H: {kelvinToCelsius(weatherData.main.temp_max)}° L:{" "}
               {kelvinToCelsius(weatherData.main.temp_min)}°
             </div>
-            <div className="flex justify-between text-sm w-full">
-              <div>{`${weatherData.name}, ${weatherData.sys.country}`}</div>
+            <div className="flex justify-between text-sm w-full text-gray-500">
+              <div className="text-gray-600">{`${weatherData.name}, ${weatherData.sys.country}`}</div>
               <div>{new Date(weatherData.dt * 1000).toLocaleString()}</div>
               <div>Humidity: {weatherData.main.humidity}%</div>
               <div className="capitalize">
