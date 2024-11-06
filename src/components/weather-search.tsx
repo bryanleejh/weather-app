@@ -1,5 +1,3 @@
-// src/WeatherSearch.jsx
-
 "use client";
 
 import { Search, Trash2 } from "lucide-react";
@@ -9,15 +7,86 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 export default function WeatherSearch() {
-  const [searchQuery, setSearchQuery] = useState("Singa");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [weatherData, setWeatherData] = useState<{
+    name: string;
+    main: {
+      temp: number;
+      humidity: number;
+      temp_max: number;
+      temp_min: number;
+    };
+    sys: {
+      country: string;
+    };
+    dt: number;
+    weather: {
+      description: string;
+    }[];
+  } | null>(null);
+  const [searchHistory, setSearchHistory] = useState<
+    {
+      location: string;
+      timestamp: string;
+    }[]
+  >([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const searchHistory = [
-    { location: "Johor, MY", timestamp: "01-09-2022 09:41am" },
-    { location: "Osaka, JP", timestamp: "01-09-2022 09:41am" },
-    { location: "Seoul, KR", timestamp: "01-09-2022 09:41am" },
-    { location: "Tokusan-ri, KR", timestamp: "01-09-2022 09:41am" },
-    { location: "Taipei, TW", timestamp: "01-09-2022 09:41am" },
-  ];
+  const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
+
+  const fetchWeatherData = async (location: string) => {
+    const [city, country] = location.split(",").map((item) => item.trim());
+
+    if (!city || !country) {
+      setErrorMessage("Please enter a valid city and country.");
+      return;
+    }
+
+    try {
+      const geocodingAPI = `http://api.openweathermap.org/geo/1.0/direct?q=${city},${country}&limit=1&appid=${API_KEY}`;
+      const geoResponse = await fetch(geocodingAPI);
+
+      console.log("geoResponse", geoResponse);
+
+      if (!geoResponse.ok) {
+        throw new Error("Geocoding API call failed");
+      }
+
+      const geoData = await geoResponse.json();
+      if (geoData.length === 0) {
+        throw new Error("Location not found");
+      }
+
+      console.log("geoData", geoData);
+      const { lat, lon } = geoData[0];
+
+      const weatherAPI = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+      const weatherResponse = await fetch(weatherAPI);
+
+      if (!weatherResponse.ok) {
+        throw new Error("Weather API call failed");
+      }
+
+      const weatherData = await weatherResponse.json();
+      console.log("weatherData", weatherData);
+      setWeatherData(weatherData);
+      setErrorMessage("");
+
+      // Update search history
+      const newEntry = {
+        location: `${city}, ${country}`,
+        timestamp: new Date().toLocaleString(),
+      };
+      setSearchHistory((prevHistory) => [...prevHistory, newEntry]);
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("An unexpected error occurred.");
+      }
+      setWeatherData(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#b197d1] p-4 flex items-center justify-center">
@@ -26,55 +95,75 @@ export default function WeatherSearch() {
           <div className="relative">
             <Input
               className="w-full bg-white/20 border-0 placeholder:text-gray-400"
-              placeholder="Country"
+              placeholder="City, Country (e.g. Singapore, SG)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <Button
               size="icon"
               className="absolute right-0 top-0 bg-[#7c4dbd] hover:bg-[#6a3dad]"
+              onClick={() => fetchWeatherData(searchQuery)}
             >
               <Search className="h-4 w-4" />
             </Button>
+            {errorMessage && <div className="text-red-500">{errorMessage}</div>}
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="relative overflow-hidden rounded-lg bg-white/10 p-6">
-            <div className="flex justify-between items-start">
-              <div className="space-y-2">
-                <div className="text-sm">Today's Weather</div>
-                <div className="text-7xl font-light">26°</div>
-                <div className="text-sm">H: 29° L: 26°</div>
-                <div className="flex gap-4 text-sm mt-4">
-                  <div>Johor, MY</div>
-                  <div>01-09-2022 09:41am</div>
+            {weatherData ? (
+              <div className="flex justify-between items-start">
+                <div className="space-y-2">
+                  <div className="text-sm">Today's Weather</div>
+                  <div className="text-7xl font-light">
+                    {weatherData.main.temp}°
+                  </div>
+                  <div className="text-sm">
+                    H: {weatherData.main.temp_max}° L:{" "}
+                    {weatherData.main.temp_min}°
+                  </div>
+                  <div className="flex gap-4 text-sm mt-4">
+                    <div>
+                      {new Date(weatherData.dt * 1000).toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="flex gap-4 text-sm">
+                    <div>Humidity: {weatherData.main.humidity}%</div>
+                    <div className="capitalize">
+                      {weatherData.weather[0].description}
+                    </div>
+                  </div>
                 </div>
-                <div className="flex gap-4 text-sm">
-                  <div>Humidity: 58%</div>
-                  <div>Clouds</div>
+                <div className="absolute right-4 top-4">
+                  <div className="relative w-32 h-32">
+                    <div className="absolute right-0 top-0 w-16 h-16 bg-yellow-400 rounded-full" />
+                    <div className="absolute left-0 bottom-0 w-24 h-24 bg-white rounded-full" />
+                  </div>
                 </div>
               </div>
-              <div className="absolute right-4 top-4">
-                <div className="relative w-32 h-32">
-                  <div className="absolute right-0 top-0 w-16 h-16 bg-yellow-400 rounded-full" />
-                  <div className="absolute left-0 bottom-0 w-24 h-24 bg-white rounded-full" />
-                </div>
+            ) : (
+              <div className="text-center text-gray-500">
+                No weather data available. Please search for a location.
               </div>
-            </div>
+            )}
           </div>
 
           <div className="space-y-2">
             <h3 className="text-lg font-medium">Search History</h3>
             <div className="space-y-2">
-              {searchHistory.map((item, index) => (
+              {searchHistory.map((item) => (
                 <div
-                  key={index}
+                  key={`${item.location}${item.timestamp}`}
                   className="flex items-center justify-between bg-white/10 rounded-lg p-4"
                 >
                   <span>{item.location}</span>
                   <div className="flex items-center gap-2">
                     <span className="text-sm">{item.timestamp}</span>
-                    <Button size="icon" variant="ghost">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => fetchWeatherData(item.location)}
+                    >
                       <Search className="h-4 w-4" />
                     </Button>
                     <Button size="icon" variant="ghost">
