@@ -17,12 +17,13 @@ const SearchHistoryItem: React.FC<SearchHistoryItemProps> = ({
   deleteHistoryEntry,
 }) => {
   return (
-    <div className="flex items-center justify-between bg-white/10 rounded-lg p-4">
+    <div className="rounded-lg flex items-center justify-between bg-white/20 p-4">
       <span>{item.location}</span>
       <div className="flex items-center gap-2">
         <span className="text-sm">{item.timestamp}</span>
         <Button
           size="icon"
+          className="bg-white rounded-full"
           variant="ghost"
           onClick={() => fetchWeatherData(item.location)}
         >
@@ -30,6 +31,7 @@ const SearchHistoryItem: React.FC<SearchHistoryItemProps> = ({
         </Button>
         <Button
           size="icon"
+          className="bg-white rounded-full"
           variant="ghost"
           onClick={() => deleteHistoryEntry(item.location, item.timestamp)}
         >
