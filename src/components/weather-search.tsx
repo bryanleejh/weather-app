@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import SearchInput from "./search-input";
 import WeatherDisplay from "./weather-display";
 import SearchHistory from "./search-history";
@@ -69,6 +69,8 @@ export default function WeatherSearch() {
       }
 
       const weatherData = await weatherResponse.json();
+
+      console.log("weatherData", weatherData);
       setWeatherData(weatherData);
       setErrorMessage("");
 
@@ -97,17 +99,15 @@ export default function WeatherSearch() {
   };
 
   return (
-    <div className="min-h-screen bg-[#b197d1] p-4 flex items-center justify-center">
-      <Card className="w-full max-w-2xl bg-white/20 backdrop-blur border-0">
-        <CardHeader className="space-y-2">
-          <SearchInput
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            onSearch={() => fetchWeatherData(searchQuery)}
-            errorMessage={errorMessage}
-          />
-        </CardHeader>
-        <CardContent className="space-y-6">
+    <div className="min-h-screen bg-[#b197d1] p-4 flex flex-col items-center justify-center">
+      <SearchInput
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onSearch={() => fetchWeatherData(searchQuery)}
+        errorMessage={errorMessage}
+      />
+      <Card className="w-full max-w-2xl bg-white/20 backdrop-blur border-0 mt-6">
+        <CardContent>
           <WeatherDisplay
             weatherData={weatherData}
             kelvinToCelsius={kelvinToCelsius}

@@ -2,11 +2,15 @@ import React from "react";
 
 interface WeatherDisplayProps {
   weatherData: {
+    name: string;
     main: {
       temp: number;
       humidity: number;
       temp_max: number;
       temp_min: number;
+    };
+    sys: {
+      country: string;
     };
     dt: number;
     weather: {
@@ -24,7 +28,7 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({
     <div className="relative overflow-hidden rounded-lg p-6">
       {weatherData ? (
         <div className="flex justify-between items-start">
-          <div className="space-y-2">
+          <div className="space-y-2 w-full">
             <div className="text-sm">Today's Weather</div>
             <div className="text-7xl font-light">
               {kelvinToCelsius(weatherData.main.temp)}°
@@ -33,10 +37,9 @@ const WeatherDisplay: React.FC<WeatherDisplayProps> = ({
               H: {kelvinToCelsius(weatherData.main.temp_max)}° L:{" "}
               {kelvinToCelsius(weatherData.main.temp_min)}°
             </div>
-            <div className="flex gap-4 text-sm mt-4">
+            <div className="flex justify-between text-sm w-full">
+              <div>{`${weatherData.name}, ${weatherData.sys.country}`}</div>
               <div>{new Date(weatherData.dt * 1000).toLocaleString()}</div>
-            </div>
-            <div className="flex gap-4 text-sm">
               <div>Humidity: {weatherData.main.humidity}%</div>
               <div className="capitalize">
                 {weatherData.weather[0].description}

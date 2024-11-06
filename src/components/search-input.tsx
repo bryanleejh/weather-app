@@ -17,7 +17,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   errorMessage,
 }) => {
   return (
-    <div className="flex items-center">
+    <div className="flex items-center w-full max-w-2xl">
       <Input
         className="rounded-xl w-full bg-white/20 border-0 placeholder:text-gray-400"
         placeholder="City, Country (e.g. Singapore, SG)"
