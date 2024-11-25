@@ -47,7 +47,7 @@ export default function WeatherSearch() {
     }
 
     try {
-      const geocodingAPI = `http://api.openweathermap.org/geo/1.0/direct?q=${city},${country}&limit=1&appid=${API_KEY}`;
+      const geocodingAPI = `https://api.openweathermap.org/geo/1.0/direct?q=${city},${country}&limit=1&appid=${API_KEY}`;
       const geoResponse = await fetch(geocodingAPI);
 
       if (!geoResponse.ok) {
