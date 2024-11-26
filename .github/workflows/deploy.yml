@@ -39,6 +39,7 @@ jobs:
             echo "API Key is empty!"
           else
             echo "API Key is set."
+          fi
 
       # Step 5: Build the application
       - name: Build application
