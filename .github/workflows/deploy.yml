@@ -31,8 +31,6 @@ jobs:
         run: env
 
       - name: Check Environment Variables
-        env:
-          VITE_OPENWEATHERMAP_API_KEY: ${{ secrets.VITE_OPENWEATHERMAP_API_KEY }}
         run: |
           if [ -z "$VITE_OPENWEATHERMAP_API_KEY" ]; then
             echo "API Key is empty!"
