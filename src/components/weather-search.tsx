@@ -1,10 +1,13 @@
-"use client";
-
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import SearchInput from "./search-input";
 import WeatherDisplay from "./weather-display";
 import SearchHistory from "./search-history";
+
+interface SearchHistoryItem {
+  location: string;
+  timestamp: string;
+}
 
 export default function WeatherSearch() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,12 +27,7 @@ export default function WeatherSearch() {
       description: string;
     }[];
   } | null>(null);
-  const [searchHistory, setSearchHistory] = useState<
-    {
-      location: string;
-      timestamp: string;
-    }[]
-  >([]);
+  const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
 
   const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
@@ -79,7 +77,10 @@ export default function WeatherSearch() {
         location: `${city}, ${country}`,
         timestamp: new Date().toLocaleString(),
       };
-      setSearchHistory((prevHistory) => [...prevHistory, newEntry]);
+      setSearchHistory((prevHistory: SearchHistoryItem[]) => [
+        ...prevHistory,
+        newEntry,
+      ]);
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -91,7 +92,7 @@ export default function WeatherSearch() {
   };
 
   const deleteHistoryEntry = (location: string, timestamp: string) => {
-    setSearchHistory((prevHistory) =>
+    setSearchHistory((prevHistory: SearchHistoryItem[]) =>
       prevHistory.filter(
         (entry) => entry.location !== location || entry.timestamp !== timestamp
       )

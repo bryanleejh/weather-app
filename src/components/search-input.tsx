@@ -17,20 +17,22 @@ const SearchInput: React.FC<SearchInputProps> = ({
   errorMessage,
 }) => {
   return (
-    <div className="flex items-center w-full max-w-2xl">
-      <Input
-        className="rounded-xl w-full bg-white/20 border-0 placeholder:text-gray-400"
-        placeholder="City, Country (e.g. Singapore, SG)"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      <Button
-        size="icon"
-        className="rounded-xl ml-2 bg-[#7c4dbd] hover:bg-[#6a3dad]"
-        onClick={onSearch}
-      >
-        <Search className="h-4 w-4" />
-      </Button>
+    <div className="w-full max-w-2xl">
+      <div className="flex items-center">
+        <Input
+          className="rounded-xl w-full bg-white/20 border-0 placeholder:text-gray-400"
+          placeholder="City, Country (e.g. Singapore, SG)"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <Button
+          size="icon"
+          className="rounded-xl ml-2 bg-[#7c4dbd] hover:bg-[#6a3dad]"
+          onClick={onSearch}
+        >
+          <Search className="h-4 w-4" />
+        </Button>
+      </div>
       {errorMessage && <div className="text-red-500">{errorMessage}</div>}
     </div>
   );
