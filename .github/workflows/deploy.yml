@@ -10,26 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18 # Use the version required by your project
 
-      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Inject Environment Variables
       - name: Inject Environment Variables
         env:
           VITE_OPENWEATHERMAP_API_KEY: ${{ secrets.VITE_OPENWEATHERMAP_API_KEY }}
         run: |
           echo "VITE_OPENWEATHERMAP_API_KEY=${VITE_OPENWEATHERMAP_API_KEY}" >> .env.local
+
+      - name: Debug Context
+        run: env
 
       - name: Check Environment Variables
         env:
@@ -41,11 +40,9 @@ jobs:
             echo "API Key is set."
           fi
 
-      # Step 5: Build the application
       - name: Build application
         run: npm run build
 
-      # Step 6: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
