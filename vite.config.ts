@@ -4,6 +4,9 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   base: "/weather-app/",
+  define: {
+    "process.env": process.env,
+  },
   plugins: [react()],
   resolve: {
     alias: {
