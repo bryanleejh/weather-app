@@ -1,49 +1,42 @@
-name: Deploy to GitHub Pages
+name: Build and Deploy
 
 on:
   push:
     branches:
-      - main # Trigger deployment on changes to the `main` branch
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18 # Use the version required by your project
+          node-version: 16
 
+      # Install dependencies
       - name: Install dependencies
         run: npm install
 
-      - name: Inject Environment Variables
+      # Inject environment variables
+      - name: Inject API Key
         env:
-          VITE_OPENWEATHERMAP_API_KEY: ${{ secrets.VITE_OPENWEATHERMAP_API_KEY }}
+          VITE_API_KEY: ${{ secrets.VITE_OPENWEATHERMAP_API_KEY }}
         run: |
-          echo "VITE_OPENWEATHERMAP_API_KEY=$VITE_OPENWEATHERMAP_API_KEY" >> .env.local
+          echo "::add-mask::${VITE_API_KEY}"
+          echo "VITE_API_KEY=${VITE_API_KEY}" >> .env.local
 
-      - name: Check .env.local
-        run: cat .env.local
-
-      - name: Debug Context
-        run: env
-
-      - name: Check Environment Variables
-        run: |
-          if [ -z "$VITE_OPENWEATHERMAP_API_KEY" ]; then
-            echo "API Key is empty!"
-          else
-            echo "API Key is set."
-          fi
-
+      # Build application
       - name: Build application
         run: npm run build
 
+      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
