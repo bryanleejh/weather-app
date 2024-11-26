@@ -31,9 +31,14 @@ jobs:
         run: |
           echo "VITE_OPENWEATHERMAP_API_KEY=${VITE_OPENWEATHERMAP_API_KEY}" >> .env.local
 
-      - name: Inject Environment Variables
+      - name: Check Environment Variables
+        env:
+          VITE_OPENWEATHERMAP_API_KEY: ${{ secrets.VITE_OPENWEATHERMAP_API_KEY }}
         run: |
-          echo "API Key: ${{ secrets.VITE_OPENWEATHERMAP_API_KEY }}"
+          if [ -z "$VITE_OPENWEATHERMAP_API_KEY" ]; then
+            echo "API Key is empty!"
+          else
+            echo "API Key is set."
 
       # Step 5: Build the application
       - name: Build application
