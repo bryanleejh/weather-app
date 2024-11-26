@@ -3,33 +3,39 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main # Replace 'main' with your default branch if different
+      - main # Trigger deployment on changes to the `main` branch
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      # Step 1: Check out the repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18 # Use the version of Node.js you're using locally
+          node-version: 16 # Use the version required by your project
 
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
+      # Step 4: Inject Environment Variables
       - name: Inject Environment Variables
         env:
           VITE_OPENWEATHERMAP_API_KEY: ${{ secrets.VITE_OPENWEATHERMAP_API_KEY }}
         run: |
           echo "VITE_OPENWEATHERMAP_API_KEY=${VITE_OPENWEATHERMAP_API_KEY}" >> .env.local
 
-      - name: Build the project
+      # Step 5: Build the application
+      - name: Build application
         run: npm run build
 
+      # Step 6: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
